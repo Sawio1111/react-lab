@@ -20,13 +20,13 @@ export const MovForm = ({handleOnAdd}) => {
             setDisabledAdd(true)
         }
         else if (titleLength < 5) {
-            setMessage('Tytuł jest za krótki. Nagrywają takie filmy?');
+            setMessage('The title is too short. Do they make such movies?');
             setDisabledAdd(true)
         } else if (titleLength <= 15) {
-            setMessage('Tytuł jest w sam raz na plakat do kina');
+            setMessage('The title is just right for a movie poster');
             setDisabledAdd(false)
         } else {
-            setMessage('Tytuł jest za długi');
+            setMessage('The title is too long');
             setDisabledAdd(true)
         }
     }
