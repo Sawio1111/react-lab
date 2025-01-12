@@ -1,68 +1,48 @@
-import logo from './logo.svg';
 import "milligram";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import './App.css';
 import { movies } from './data';
 import { Titles } from './Titles';
-import { MyFav } from './MyFav';
+import { MovForm } from './MovForm';
 
 const App = () => {
 
-  const [title, setTitle] = useState(null)
-  const [year, setYear] = useState(null)
   const [myMovies, setMyMovies] = useState(movies)
-  const [message, setMessage] = useState(null)
+  const [showForm, setShowForm] = useState(false)
 
-  useEffect(() => {
-    messageCalculation(title)
-  }, [title])
-
-  const messageCalculation = (title) => {
-    if (title?.length < 5 ) {
-      setMessage('Tutuł jest za krótki. Nagrywają takie filmy?')
-    } else if (title?.length < 15) {
-      setMessage('Tutuł jest za ekstra. W sam raz na plakat na kino')
-    } else {
-      setMessage('Tutuł jest za zadługi')
+  const handleOnAdd = (title, year) => {
+    if (myMovies.some(movie => movie.title === title)) {
+      alert(`The movie ${title} is already in the list.`);
+      return;
     }
-  }
-
-  const clearInputs = () => {
-    setTitle('')
-    setYear('')
-  }
-
-  const handleTitle = (event) => {
-      setTitle(event.target.value)
-  }
-
-  const handleYear = (event) => {
-    setYear(event.target.value)
-}
-
-  const handleAdd = () => {
     setMyMovies([...myMovies, {
       title: title,
       year: year
     }])
-    clearInputs()
     alert(`Added new movie ${title} ${year}`)
+  }
+  
+  const handleButtonShow = () => {
+    setShowForm(!showForm)
+  }
+
+  const deleteMovieByTitle = (title) => {
+    return myMovies.filter(movie => movie.title !== title);
+  }
+
+  const handleOnDelete = (title) => {
+    const newMovies = deleteMovieByTitle(title)
+    setMyMovies(newMovies)
   }
 
   return (
       <div>
           <h1>My favourite movies to watch</h1>
-          <Titles movies={myMovies}/>
-          <MyFav title={title}/>
-          <h2>Add Movie</h2>
+          <Titles movies={myMovies} handleOnDelete={handleOnDelete}/>
           <div>
-            <h3 style={{ fontWeight: 'bold' }}>Title</h3>
-            <input type="text" value={title} onChange={handleTitle}/>
-            <div>{message}</div>
-            <h3 style={{ fontWeight: 'bold' }}>Year</h3>
-            <input type="text" value={year} onChange={handleYear}/>
-            <button onClick={handleAdd}>Add Movie</button>
+          <button onClick={handleButtonShow}>{showForm ? 'Hide' : 'Show'}</button>
+          {showForm ? <MovForm handleOnAdd={handleOnAdd} />: null}
           </div>
       </div>
   );
